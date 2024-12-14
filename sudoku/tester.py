@@ -48,10 +48,12 @@ class SudokuTester:
                         print(str(board[i][j]) + " ", end="")
             print()  # Extra line after board
             
-        if self.difficulty == 'inkala2006':
+        if self.difficulty in ['inkala2006', 'inkala2010']:
             # Test specific Inkala puzzle
-            puzzle = getattr(SudokuGenerator, 'INKALA_2006')
-            print(f"Testing {self.difficulty.upper()} puzzle (World's most difficult Sudoku)")
+            puzzle_attr = 'INKALA_2006' if self.difficulty == 'inkala2006' else 'INKALA_2010'
+            puzzle = getattr(SudokuGenerator, puzzle_attr)
+            year = '2006' if self.difficulty == 'inkala2006' else '2010'
+            print(f"Testing Inkala {year} puzzle (World's most difficult Sudoku)")
             print("\nInitial board:")
             print_board(puzzle)
             puzzle_copy = [row[:] for row in puzzle]
@@ -62,7 +64,7 @@ class SudokuTester:
             self.results.append({
                 'solved': solved,
                 'time': solve_time,
-                'puzzle_type': 'inkala2006'
+                'puzzle_type': self.difficulty
             })
         else:
             # Test random puzzles
@@ -89,7 +91,7 @@ class SudokuTester:
         """Print detailed test results."""
         print("\nResults:")
         
-        if self.difficulty == 'inkala2006':
+        if self.difficulty in ['inkala2006', 'inkala2010']:
             # For predefined puzzles
             result = self.results[0]
             print(f"Solved: {'Yes' if result['solved'] else 'No'}")
@@ -118,7 +120,7 @@ def main():
                       help='Number of puzzles to test')
     parser.add_argument('-d', '--difficulty', 
                       default='medium',
-                      choices=['easy', 'medium', 'hard', 'extreme', 'inkala2006'],
+                      choices=['easy', 'medium', 'hard', 'extreme', 'inkala2006', 'inkala2010'],
                       help='Puzzle difficulty level')
     args = parser.parse_args()
     

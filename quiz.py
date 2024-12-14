@@ -18,4 +18,3 @@ def solve_sudoku(matrix: List[List[int]]) -> bool:
     """
     solver = SudokuSolver(matrix)
     return solver.solve()
-
