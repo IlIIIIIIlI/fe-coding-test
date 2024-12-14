@@ -15,6 +15,43 @@ class SudokuSolver:
         self.attempts = 0
         self.board = [row[:] for row in board]  # Create a copy to preserve original
         self.candidates = None
+        self.initial_board = [row[:] for row in board]
+        
+    def validate_solution(self) -> bool:
+        """Validate if current board state is a valid solution."""
+        # Check no zeros
+        if any(0 in row for row in self.board):
+            return False
+            
+        # Check rows
+        for row in self.board:
+            if len(set(row)) != 9:
+                return False
+                
+        # Check columns
+        for j in range(9):
+            col = [self.board[i][j] for i in range(9)]
+            if len(set(col)) != 9:
+                return False
+                
+        # Check boxes
+        for box_row in range(0, 9, 3):
+            for box_col in range(0, 9, 3):
+                box = []
+                for i in range(box_row, box_row + 3):
+                    for j in range(box_col, box_col + 3):
+                        box.append(self.board[i][j])
+                if len(set(box)) != 9:
+                    return False
+                    
+        # Check matches initial constraints
+        for i in range(9):
+            for j in range(9):
+                if self.initial_board[i][j] != 0:
+                    if self.board[i][j] != self.initial_board[i][j]:
+                        return False
+        
+        return True
         
     def is_valid(self, num: int, pos: Tuple[int, int]) -> bool:
         """Check if number is valid in given position."""
@@ -67,7 +104,6 @@ class SudokuSolver:
             for j in range(self.size):
                 if self.board[i][j] == 0:
                     valid_moves = 0
-                    # Count valid moves for this position
                     for num in range(1, 10):
                         if self.is_valid(num, (i, j)):
                             valid_moves += 1
@@ -139,7 +175,7 @@ class SudokuSolver:
         
         empty = self.find_best_empty()
         if not empty:
-            return True
+            return self.validate_solution()
             
         row, col = empty
         for num in range(1, self.size + 1):
@@ -153,11 +189,32 @@ class SudokuSolver:
                 
         return False
     
-    def solve(self) -> bool:
+    def print_board(self, board: List[List[int]]) -> None:
+        """Pretty print the Sudoku board."""
+        for i in range(len(board)):
+            if i % 3 == 0 and i != 0:
+                print("- - - - - - - - - - - -")
+            for j in range(len(board[0])):
+                if j % 3 == 0 and j != 0:
+                    print("|", end=" ")
+                if j == 8:
+                    print(board[i][j])
+                else:
+                    print(str(board[i][j]) + " ", end="")
+        print()
+
+    def solve(self, verbose: bool = False) -> bool:
         """
         Solve the Sudoku using hybrid approach.
         First tries heuristic approach, falls back to pure DFS if needed.
+        
+        Args:
+            verbose (bool): Whether to print the boards and detailed information
         """
+        if verbose:
+            print("Initial board:")
+            self.print_board(self.initial_board)
+
         start_time = time.time()
         self.attempts = 0
         
@@ -165,6 +222,21 @@ class SudokuSolver:
         board_copy = [row[:] for row in self.board]
         if self._solve_heuristic():
             self.solve_time = time.time() - start_time
+            
+            # Check if the solution is valid
+            if not self.validate_solution():
+                if verbose:
+                    print("\nInvalid solution!")
+                    print(f"Attempts: {self.attempts}")
+                    print(f"Time: {self.solve_time*1000:.2f}ms")
+                return False
+                
+            if verbose:
+                print("\nSolution found!")
+                print(f"Attempts: {self.attempts}")
+                print(f"Time: {self.solve_time*1000:.2f}ms")
+                print("\nSolution:")
+                self.print_board(self.board)
             return True
             
         # If heuristic fails, restore board and try pure DFS
@@ -173,6 +245,19 @@ class SudokuSolver:
         result = self._solve_dfs()
         
         self.solve_time = time.time() - start_time
+        
+        if verbose:
+            if result:
+                print("\nSolution found!")
+                print(f"Attempts: {self.attempts}")
+                print(f"Time: {self.solve_time*1000:.2f}ms")
+                print("\nSolution:")
+                self.print_board(self.board)
+            else:
+                print("\nNo solution exists!")
+                print(f"Attempts: {self.attempts}")
+                print(f"Time: {self.solve_time*1000:.2f}ms")
+            
         return result
     
     def get_solve_time(self) -> float:
