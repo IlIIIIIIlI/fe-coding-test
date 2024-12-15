@@ -15,6 +15,23 @@ def solve_sudoku(matrix: List[List[int]]) -> bool:
     Returns:
         bool: True if solved successfully, False otherwise.
               The input matrix is modified in place with the solution.
+              The results will saved in sudoku/puzzles directory
     """
-    solver = SudokuSolver(matrix)
-    return solver.solve()
+    matrix_p = [row[:] for row in matrix]
+    solver = SudokuSolver(matrix_p)
+    return solver.solve(verbose=True)
+
+
+# if __name__ == "__main__":
+#     puzzle = [
+#         [5,3,0,0,7,0,0,0,0],
+#         [6,0,0,1,9,5,0,0,0],
+#         [0,9,8,0,0,0,0,6,0],
+#         [8,0,0,0,6,0,0,0,3],
+#         [4,0,0,8,0,3,0,0,1],
+#         [7,0,0,0,2,0,0,0,6],
+#         [0,6,0,0,0,0,2,8,0],
+#         [0,0,0,4,1,9,0,0,5],
+#         [0,0,0,0,8,0,0,7,9]
+#     ]
+#     solve_sudoku(puzzle)

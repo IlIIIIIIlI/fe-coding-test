@@ -12,10 +12,10 @@ class SudokuTester:
 
     # Difficulty mapping with corresponding max cells to remove
     DIFFICULTY_LEVELS = {
-        'easy': 0.3,    # Remove ~19 numbers, keep 62
-        'medium': 0.5,  # Remove ~32 numbers, keep 49
-        'hard': 0.7,    # Remove ~45 numbers, keep 36
-        'extreme': 0.9  # Remove ~58 numbers, keep 23
+        'easy': 0.3,    # Remove ~30 numbers
+        'medium': 0.5,  # Remove ~40 numbers
+        'hard': 0.7,    # Remove ~50 numbers
+        'extreme': 0.9  # Remove ~55 numbers
     }
 
     def __init__(self, num_puzzles: int = 10, difficulty: str = 'medium', save_dir: str = None):
