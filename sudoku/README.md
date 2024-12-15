@@ -20,4 +20,5 @@ python -m sudoku.tester -d inkala2010
 Note: The calculation is based on max_to_remove = 64 (81 total cells - 17 minimum clues required for a unique solution)
 
 ![alt text](image-1.png)
-https://github.com/Jellyfish042/Sudoku-RWKV?tab=readme-ov-file#sudoku-rwkv
+https://github.com/Jellyfish042/Sudoku-RWKV.git
+https://huggingface.co/blog/zh/rwkv
