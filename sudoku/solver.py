@@ -279,7 +279,7 @@ class SudokuSolver:
                         min_pos = (i, j)
                         
         if min_pos is None:
-            return self.validate_solution()  # 确保找到的解是有效的
+            return self.validate_solution()
             
         row, col = min_pos
         candidates = sorted(list(self.candidates[row][col]))  # Sort for deterministic behavior
